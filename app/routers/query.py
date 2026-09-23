@@ -5,7 +5,7 @@ from app.schemas.openai import PromptRequest
 
 router = APIRouter()
 
-@router.post("/prompt")
+@router.post("/query")
 async def query(body: PromptRequest, request: Request):
     client: AsyncOpenAI = request.app.state.openai_client
     try:

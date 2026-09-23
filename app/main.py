@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from openai import AsyncOpenAI
-from app.routers import prompt
+from app.routers import query
 from app.settings import settings
 
 async def lifespan(app: FastAPI):
@@ -20,4 +20,4 @@ app = FastAPI(title="kai API", lifespan=lifespan)
 def health():
     return {"status": "ok"}
 
-app.include_router(prompt.router)
+app.include_router(query.router)
