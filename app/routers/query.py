@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from openai import AsyncOpenAI
-from app.settings import settings
 from app.schemas.openai import PromptRequest
 
 router = APIRouter()

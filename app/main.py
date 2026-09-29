@@ -1,6 +1,7 @@
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from openai import AsyncOpenAI
+from app.auth import validate_api_key
 from app.routers import query
 from app.settings import settings
 
@@ -29,4 +30,4 @@ app = FastAPI(title="kai API", lifespan=lifespan)
 def health():
     return {"status": "ok"}
 
-app.include_router(query.router)
+app.include_router(query.router, dependencies=[Depends(validate_api_key)])
