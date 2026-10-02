@@ -1,9 +1,12 @@
 from pathlib import Path
 from fastapi import Depends, FastAPI
 from openai import AsyncOpenAI
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from app.auth import validate_api_key
 from app.routers import query
 from app.settings import settings
+from app.rate_limit import limiter
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -25,6 +28,11 @@ async def lifespan(app: FastAPI):
     print("close")
 
 app = FastAPI(title="kai API", lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(
+    RateLimitExceeded,
+    _rate_limit_exceeded_handler,
+)
 
 @app.get("/health")
 def health():

@@ -4,6 +4,7 @@ import openai
 from fastapi import APIRouter, Request
 from fastapi.sse import EventSourceResponse
 from openai import AsyncOpenAI
+from app.rate_limit import limiter, daily_budget
 from app.errors import upstream_error
 from app.schemas.openai import PromptRequest
 
@@ -15,6 +16,8 @@ def sse(event: str, data) -> str:
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 @router.post("/query")
+@limiter.limit("5/minute")
+@daily_budget
 async def query(body: PromptRequest, request: Request):
     profile: str = request.app.state.profile
     system_prompt: str = request.app.state.system_prompt
@@ -28,6 +31,8 @@ async def query(body: PromptRequest, request: Request):
                 model="gpt-5-mini",
                 input=body.messages,
                 instructions=instructions,
+                max_output_tokens=1500,
+                timeout=30.0,
                 stream=True,
             )
     except openai.OpenAIError as exc:
