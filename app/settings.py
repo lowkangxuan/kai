@@ -11,5 +11,6 @@ class Settings(BaseSettings):
 
     KAI_API_KEY: SecretStr
     OPENAI_API_KEY: SecretStr
+    REDIS_URL: SecretStr
 
 settings = Settings()
