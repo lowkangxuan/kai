@@ -1,4 +1,4 @@
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -13,5 +13,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: SecretStr
     REDIS_URL: SecretStr
     TRUST_RAILWAY_PROXY: bool = False
+    QUERY_REQUESTS_PER_MINUTE: int = Field(default=5, gt=0)
+    TOTAL_QUERY_REQUESTS_PER_DAY: int = Field(default=30, gt=0)
 
 settings = Settings()

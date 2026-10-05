@@ -7,6 +7,7 @@ from openai import AsyncOpenAI
 from app.rate_limit import limiter, daily_budget
 from app.errors import upstream_error
 from app.schemas.openai import PromptRequest
+from app.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ def sse(event: str, data) -> str:
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 @router.post("/query")
-@limiter.limit("5/minute")
+@limiter.limit(f"{settings.QUERY_REQUESTS_PER_MINUTE}/minute")
 @daily_budget
 async def query(body: PromptRequest, request: Request):
     profile: str = request.app.state.profile
