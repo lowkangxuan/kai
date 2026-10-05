@@ -12,5 +12,6 @@ class Settings(BaseSettings):
     KAI_API_KEY: SecretStr
     OPENAI_API_KEY: SecretStr
     REDIS_URL: SecretStr
+    TRUST_RAILWAY_PROXY: bool = False
 
 settings = Settings()
